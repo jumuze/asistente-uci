@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Asistente Virtual UCI - Amazon Polly</title>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1182.0.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        button { padding: 10px 20px; margin: 10px; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>🎧 Asistente Virtual UCI</h2>
+    <button onclick="reproducirAudio('Bienvenido a la UCI. Aquí garantizamos cuidados intensivos de alta calidad.')">📍 Información General</button>
+    <button onclick="reproducirAudio('Esta es la sala de aislamiento. Aquí se aplican estrictos protocolos de bioseguridad.')">🛡️ Sala de Aislamiento</button>
+    <button onclick="reproducirAudio('En esta área realizamos procedimientos de RCP avanzada siguiendo las guías internacionales.')">❤️ Zona de RCP</button>
+
+    <script>
+        AWS.config.region = 'eu-west-1'; // Cambia según tu región de AWS
+        AWS.config.credentials = new AWS.Credentials('AKIA46ZDFEFPU6ZRONSW', 'haP7f+Bhr5bc/Usm5tqSBROkFxhM4dde3f13nLVB');
+
+        const polly = new AWS.Polly();
+
+        function reproducirAudio(texto) {
+            const params = {
+                OutputFormat: 'mp3',
+                Text: texto,
+                VoiceId: 'Lucia', // Prueba con 'Conchita' o 'Enrique' si lo prefieres
+                LanguageCode: 'es-ES'
+            };
+
+            polly.synthesizeSpeech(params, (err, data) => {
+                if (err) {
+                    console.error("Error:", err);
+                } else {
+                    const audioBlob = new Blob([data.AudioStream], { type: 'audio/mp3' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    new Audio(audioUrl).play();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
